@@ -20,6 +20,8 @@ function App() {
   const [name, setName] = useState("");
 
 
+  console.log("connected.....");
+
   const myVideo = useRef();
   const userVideo = useRef();
   const connectionRef = useRef();
