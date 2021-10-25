@@ -1,0 +1,2 @@
+1) Solve session errors.
+2) Change DB settings.

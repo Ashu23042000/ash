@@ -4,20 +4,45 @@ const app = express();
 const server = require("http").createServer(app);
 const cors = require("cors");
 const path = require("path");
-
+const db = require("./db");
+db();
+const session = require("express-session");
+const mongoDbStore = require("connect-mongo");
+const flash = require("express-flash");
 const port = process.env.PORT || 5000;
-
 const io = require("socket.io")(server, {
     cors: {
         origin: "*",
         methods: ["GET", "POST"]
     }
 });
-
 app.use(cors());
 
 
-// -------------------------------------deployment---------------------------------
+
+// ----------------------------------------session config-----------------------------------------
+
+app.use(session({
+    secret: process.env.SESSION_SECRET_KEY,
+    resave: false,
+    store: mongoDbStore.create({ mongoUrl: process.env.DB_URL, collectionName: "sessions" }),
+    saveUninitialized: false,
+    cookie: { maxAge: 1000 * 60 * 60 * 24 }
+}));
+
+app.use((req, res, next) => {
+    res.locals.session = req.session;
+    next();
+});
+
+app.use(flash());
+
+// ----------------------------------------session config-----------------------------------------
+
+
+
+// -------------------------------------------deployment-------------------------------------------
+
 __dirname = path.resolve();
 
 if (process.env.NODE_ENV == "production") {
@@ -31,9 +56,11 @@ if (process.env.NODE_ENV == "production") {
         res.send("API is running");
     });
 }
+// -------------------------------------------deployment-------------------------------------------
 
 
-// -------------------------------------deployment---------------------------------
+
+// -------------------------------------------socket.io-------------------------------------------
 
 
 io.on("connection", (socket) => {
@@ -56,6 +83,7 @@ io.on("connection", (socket) => {
     })
 });
 
+// -------------------------------------------socket.io-------------------------------------------
 
 
 
