@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import axios from "axios";
+import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import "../css/login.css";
 
 const Login = () => {
+
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -16,24 +18,20 @@ const Login = () => {
         setPassword(e.target.value);
     }
 
-    // const data = { email, password };
+    const data = { email, password };
 
     const submitForm = (e) => {
-        e.preventDefault();
-        
-        axios.get("http://localhost:5000/")
-            .then((response) => {
-                console.log(response.status);
-            }).catch((err) => {
-                console.log(err);
-            });
+
+        if (email && password) {
+            e.preventDefault();
+            axios.post("http://localhost:5000/login", data)
+                .then((response) => {
+                    console.log(response.data);
+                }).catch((err) => {
+                    console.log(err);
+                });
+        }
     }
-
-
-
-
-
-
 
     return (
         <>
@@ -49,7 +47,7 @@ const Login = () => {
                             </div> */}
                     <button type="submit" className="btn" onClick={submitForm}>Login</button>
                     <div className="option-2">
-                        <p>Not Registered ? <a href="/signup">Create an Account</a></p>
+                        <p>Not Registered ?<Link to="/signup">Create an Account</Link></p>
                     </div>
                 </form>
             </div>
@@ -57,4 +55,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default Login;

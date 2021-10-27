@@ -37,9 +37,9 @@ app.use((req, res, next) => {
 
 app.use(flash());
 
-// ----------------------------------------session config-----------------------------------------
 
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // -------------------------------------------deployment-------------------------------------------
 
@@ -56,8 +56,15 @@ if (process.env.NODE_ENV == "production") {
         res.send("API is running");
     });
 }
-// -------------------------------------------deployment-------------------------------------------
 
+
+// -------------------------------------------routes-------------------------------------------
+
+const login = require("./routes/login");
+app.use("/login", login);
+
+const signup = require("./routes/signup");
+app.use("/signup", signup);
 
 
 // -------------------------------------------socket.io-------------------------------------------
@@ -83,11 +90,8 @@ io.on("connection", (socket) => {
     })
 });
 
-// -------------------------------------------socket.io-------------------------------------------
-
-
 
 
 server.listen(port, () => {
-    console.log(`server is running on port ${port}`);
+    console.log(`Server is running on port ${port}`);
 });
