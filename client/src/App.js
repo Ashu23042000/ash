@@ -1,6 +1,5 @@
-import logo from './logo.svg';
 import './App.css';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, createContext } from 'react';
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
@@ -9,15 +8,17 @@ import io from "socket.io-client";
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from "./pages/Signup";
-import Peer from "simple-peer";
+import People from './pages/People';
+import Chat from './pages/Chat';
+// import Peer from "simple-peer";
 
-const socket = io.connect("https://ashreactvideoapp.herokuapp.com");
+// const socket = io.connect("https://ashreactvideoapp.herokuapp.com");
+const socket = io.connect("http://localhost:5000");
 
-
-
-
+const Socket = createContext();
 
 function App() {
+
 
   // const [me, setMe] = useState("");
   // const [stream, setStream] = useState();
@@ -115,24 +116,29 @@ function App() {
   //   connectionRef.current.destroy();
   // }
 
-
-
   return (
     <>
-
-      <Router>
-        <Switch>
-          <Route path="/" exact>
-            <Home />
-          </Route>
-          <Route path="/login" exact>
-            <Login />
-          </Route>
-          <Route path="/signup" exact>
-            <Signup />
-          </Route>
-        </Switch>
-      </Router>
+      <Socket.Provider value={socket}>
+        <Router >
+          <Switch>
+            <Route path="/" exact>
+              <Home />
+            </Route>
+            <Route path="/login" exact>
+              <Login />
+            </Route>
+            <Route path="/signup" exact>
+              <Signup />
+            </Route>
+            <Route path="/people" exact>
+              <People />
+            </Route>
+            <Route path="/chat" exact>
+              <Chat />
+            </Route>
+          </Switch>
+        </Router>
+      </Socket.Provider>
 
       {/* <h1 style={{ textAlign: "center" }}>AshApp</h1>
       <div className="container">
@@ -180,3 +186,4 @@ function App() {
 }
 
 export default App;
+export { Socket };

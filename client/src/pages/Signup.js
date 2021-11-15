@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router';
 import axios from "axios";
+import swal from 'sweetalert';
 import { Link } from "react-router-dom";
 import Navbar from '../components/Navbar';
 import "../css/signup.css";
 
 const Signup = () => {
+
+    const history = useHistory();
 
     const [name, setName] = useState(null);
     const [email, setEmail] = useState("");
@@ -21,7 +25,15 @@ const Signup = () => {
             e.preventDefault();
             axios.post("http://localhost:5000/signup", data)
                 .then((response) => {
-                    console.log(response.data);
+                    if (response.status === 200) {
+                        swal(response.data, "Login now", "success");
+                        history.push("/login");
+                    } else if (response.status === 201) {
+                        swal(response.data, "Try with another email", "error");
+                        console.log(response.data);
+                    } else {
+                        swal(response.data, "Try again", "error");
+                    }
                 }).catch((err) => {
                     console.log(err);
                 });

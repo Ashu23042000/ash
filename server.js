@@ -69,6 +69,7 @@ app.use("/signup", signup);
 
 // -------------------------------------------socket.io-------------------------------------------
 
+let usersConnected = {};
 
 io.on("connection", (socket) => {
     socket.emit("me", socket.id);
@@ -87,7 +88,35 @@ io.on("connection", (socket) => {
 
     socket.on("endCallByUser", (id) => {
         io.to(id).emit("endCallByUser");
-    })
+    });
+
+
+    socket.on("disconnect", () => {
+        delete usersConnected[socket.id];
+        io.emit("connectedUsers", usersConnected);
+    });
+
+    socket.on("meConnected", (data) => {
+        data.socketId = socket.id;
+        if (!usersConnected[data.id]) {
+            usersConnected[socket.id] = data;
+        }
+        io.emit("connectedUsers", usersConnected);
+        // console.log(usersConnected);
+    });
+
+
+    socket.on("callRequest", (data) => {
+
+        io.to(data.to).emit("someOneCallingYou", { from: data.from, fromSocketId: data.fromSocketId })
+    });
+
+    // sending request reply to user----
+    socket.on("answer", (data) => {
+        console.log(data);
+        io.to(data.from).emit("requestReply", data);
+    });
+
 });
 
 

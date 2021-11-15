@@ -10,17 +10,17 @@ router.post("/", async (req, res) => {
     if (password == confirmPassword) {
         const getUser = await userModel.findOne({ email });
         if (getUser) {
-            res.status(406).send("Email already registered");
+            res.status(201).send("Email already registered");
         }
         else {
             const hashpassword = await bcrypt.hash(password, 10);
             const user = new userModel({ name, email, password: hashpassword, level, profession, reportCount: 0 });
             await user.save();
-            res.status(200).send("Login Successful");
+            res.status(200).send("Signup Successful");
 
         }
     } else {
-        res.status(406).send("Password not match");
+        res.status(202).send("Password not match");
     }
 });
 

@@ -11,15 +11,14 @@ router.post("/", async (req, res) => {
     if (getUser) {
         const comparePassword = await bcrypt.compare(password, getUser.password);
         if (comparePassword) {
-            req.session.user = getUser;
-            // res.redirect("/people");
-            res.status(200).send("Login Successful");
+            // req.session.user = getUser;
+            res.status(200).send({ message: "Login Successful", user: getUser });
         } else {
-            res.status(406).send("Password not match");
+            res.status(201).send("Password not match");
         }
     }
     else {
-        res.status(406).send("Can't get user");
+        res.status(202).send("Can't get user");
     }
 });
 
