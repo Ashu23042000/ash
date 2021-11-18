@@ -10,7 +10,7 @@ const UserCard = (props) => {
 
     const socket = useContext(Socket);
 
-
+    const [calling, setCalling] = useState(true)
 
     // const [me, setMe] = useState("");
     // const [stream, setStream] = useState();
@@ -117,19 +117,12 @@ const UserCard = (props) => {
         //         // alert(`${data.from} calling you`);
         // });
 
-
-        // return () => {
-        //     socket.off('someOneCallingYou', function (data) {
-        //         console.log(`${data.from} calling you`);
-        //         // alert(`${data.from} calling you`);
-        //     });
-        // };
-
-    })
+    });
 
     const makeCall = (id, fromId) => {
         console.log(`Make call to ${id}`);
         socket.emit("callRequest", { to: id, from: loginUser.name, fromSocketId: fromId });
+        setCalling(false);
     };
 
 
@@ -137,7 +130,7 @@ const UserCard = (props) => {
 
     return (
         <>
-            {JSON.parse(user)._id !== props.id ? (<div className="users">
+            {calling ? JSON.parse(user)._id !== props.id ? (<div className="users">
                 <h2>{props.name}</h2>
                 <div>
                     <span>
@@ -154,7 +147,9 @@ const UserCard = (props) => {
                 </button>
             </div>)
 
-                : (<div style={{ display: "none" }}></div>)}
+                : (<div style={{ display: "none" }}></div>)
+
+                : <h1>Calling </h1>}
 
         </>
 

@@ -108,7 +108,7 @@ io.on("connection", (socket) => {
 
     socket.on("callRequest", (data) => {
 
-        io.to(data.to).emit("someOneCallingYou", { from: data.from, fromSocketId: data.fromSocketId })
+        io.to(data.to).emit("someOneCallingYou", { to: data.to, from: data.from, fromSocketId: data.fromSocketId })
     });
 
     // sending request reply to user----

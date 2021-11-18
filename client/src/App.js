@@ -133,7 +133,7 @@ function App() {
             <Route path="/people" exact>
               <People />
             </Route>
-            <Route path="/chat" exact>
+            <Route path="/chat/:id" exact>
               <Chat />
             </Route>
           </Switch>
